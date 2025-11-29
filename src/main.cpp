@@ -2,16 +2,16 @@ extern "C"
 {
 #include "mlx.h"
 }
-#include <iostream>
 #include <Parser.hpp>
-#include <global_utils.hpp>
+#include <globalUtils.hpp>
+#include <exception>
 
 static const char *const USAGE = "  Usage: \"./Scop file.obj\".";
 int main(int argc, char **argv)
 {
   try
   {
-    Parser::parseArgs(argc, argv);
+    Parser::parse(argc, argv);
   }
   catch (const std::exception &error)
   {

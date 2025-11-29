@@ -1,4 +1,4 @@
-#include <iostream>
+#include <globalUtils.hpp>
 
 bool endsWith(const std::string &suffix, const std::string &str)
 {
@@ -20,7 +20,7 @@ void print(const std::string &str)
     std::cout << str << std::endl;
 }
 
-void printErr(const std::string &str, bool newline = true)
+void printErr(const std::string &str, bool newline)
 {
     std::cerr << str;
     if (newline)
