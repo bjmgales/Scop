@@ -1,67 +1,54 @@
 NAME	:= Scop
 
-
 CC := c++
-CFLAGS := -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
-AR := ar
+CFLAGS :=  -std=c++98 -g -fsanitize=address
 RM := rm -f
 MKDIR := mkdir -m 777 -p
-ECHO := echo
 
 # ********************************* H E A D S *********************************
 
-HFLAGS				:=	-I include\
-						-I ./minilibx-linux
+HFLAGS := -I include \
+          -I minilibx-linux
 
-# ********************************* F O N T S *********************************
+# ********************************* M L X *********************************
 
-EOC					:=	"\033[0m"
-LIGHT				:=	"\033[1m"
-DARK				:=	"\033[2m"
+MLX_DIR := minilibx-linux
+MLX     := $(MLX_DIR)/libmlx.a
+MLX_LNK := -L $(MLX_DIR) -lmlx -lXext -lX11 -lbsd -lm
 
-ITALIC				:=	"\033[3m"
-UNDERLINE			:=	"\033[4m"
 
-BLACK				:=	"\033[30m"
-RED					:=	"\033[31m"
-GREEN				:=	"\033[32m"
-BLUE				:=	"\033[34m"
-PURPLE				:=	"\033[35m"
-CYAN				:=	"\033[36m"
-WHITE				:=	"\033[37m"
+# ********************************* S R C S *********************************
 
-# ********************************* N A M E S *********************************
-
-SRCS := $(wildcard src/**/*.cpp) $(wildcard src/*.cpp) 
+SRCS := $(wildcard src/**/*.cpp) $(wildcard src/*.cpp)
 OBJS := $(patsubst src/%.cpp,bin/%.o,$(SRCS))
-
 OBJ_DIRS := $(sort $(dir $(OBJS)))
 
 all: $(NAME)
 
+# --- Object compilation ---
 bin/%.o: src/%.cpp | bin
-	@echo \
-	$(WHITE)$(ITALIC)"Compiling $<"$(EOC)
-	@$(CC) $(HFLAGS) -c $< -o $@
+	@echo "Compiling $<"
+	@$(CC) $(CFLAGS) $(HFLAGS) -c $< -o $@
 
 bin:
-	@$(MKDIR)  $(OBJ_DIRS)
+	@$(MKDIR) $(OBJ_DIRS)
 
-$(NAME):			$(OBJS)
-					@$(CC) $(CFLAGS) $^ -o $@
-					@$(ECHO)\
-					$(PURPLE)$(LIGHT)"$@"$(EOC)": "$(GREEN)$(ITALIC)"completed"$(EOC)
+# --- Link ---
+$(NAME): $(MLX) $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) $(MLX_LNK) -o $@
+	@echo "$(NAME): built successfully"
 
+# Build MLX if needed
+$(MLX):
+	@$(MAKE) -C $(MLX_DIR)
 
 clean:
 	@$(RM) $(OBJS)
-	@echo \
-	$(RED)$(LIGHT)$(ITALIC)"Binary files deleted"$(EOC)
+	@echo "Objects deleted"
 
 fclean: clean
 	@$(RM) -r bin $(NAME)
-	@echo \
-	$(RED)$(LIGHT)$(ITALIC)"Executable deleted"$(EOC)
+	@echo "Executable deleted"
 
 re: fclean all
 
