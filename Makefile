@@ -1,54 +1,74 @@
 NAME	:= Scop
 
 CC := c++
-CFLAGS :=  -std=c++98 -g -fsanitize=address
+CFLAGS := -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+AR := ar
 RM := rm -f
 MKDIR := mkdir -m 777 -p
+ECHO := echo
 
 # ********************************* H E A D S *********************************
 
-HFLAGS := -I include \
-          -I minilibx-linux
+HFLAGS				:=	-I include\
+						-I ./minilibx-linux
 
-# ********************************* M L X *********************************
+# ********************************* F O N T S *********************************
+
+EOC					:=	"\033[0m"
+LIGHT				:=	"\033[1m"
+DARK				:=	"\033[2m"
+
+ITALIC				:=	"\033[3m"
+UNDERLINE			:=	"\033[4m"
+
+BLACK				:=	"\033[30m"
+RED					:=	"\033[31m"
+GREEN				:=	"\033[32m"
+BLUE				:=	"\033[34m"
+PURPLE				:=	"\033[35m"
+CYAN				:=	"\033[36m"
+WHITE				:=	"\033[37m"
+
+# ********************************* L I B S *********************************
 
 MLX_DIR := minilibx-linux
 MLX     := $(MLX_DIR)/libmlx.a
-MLX_LNK := -L $(MLX_DIR) -lmlx -lXext -lX11 -lbsd -lm
+MLX_LNK := -L $(MLX_DIR) -lmlx -lXext -lX11 -lm -lbsd
 
+# ********************************* N A M E S *********************************
 
-# ********************************* S R C S *********************************
-
-SRCS := $(wildcard src/**/*.cpp) $(wildcard src/*.cpp)
+SRCS := $(wildcard src/**/*.cpp) $(wildcard src/*.cpp) 
 OBJS := $(patsubst src/%.cpp,bin/%.o,$(SRCS))
+
 OBJ_DIRS := $(sort $(dir $(OBJS)))
 
 all: $(NAME)
 
-# --- Object compilation ---
 bin/%.o: src/%.cpp | bin
-	@echo "Compiling $<"
-	@$(CC) $(CFLAGS) $(HFLAGS) -c $< -o $@
+	@echo \
+	$(WHITE)$(ITALIC)"Compiling $<"$(EOC)
+	@$(CC) $(HFLAGS) -c $< -o $@
 
 bin:
-	@$(MKDIR) $(OBJ_DIRS)
+	@$(MKDIR)  $(OBJ_DIRS)
 
-# --- Link ---
 $(NAME): $(MLX) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(MLX_LNK) -o $@
-	@echo "$(NAME): built successfully"
+	@$(CC) $(CFLAGS) $^ $(MLX_LNK) -o $@
+	@$(ECHO)\
+	 $(PURPLE)$(LIGHT)"$@"$(EOC)": "$(GREEN)$(ITALIC)"completed"$(EOC)
 
-# Build MLX if needed
 $(MLX):
 	@$(MAKE) -C $(MLX_DIR)
 
 clean:
 	@$(RM) $(OBJS)
-	@echo "Objects deleted"
+	@echo \
+	$(RED)$(LIGHT)$(ITALIC)"Binary files deleted"$(EOC)
 
 fclean: clean
 	@$(RM) -r bin $(NAME)
-	@echo "Executable deleted"
+	@echo \
+	$(RED)$(LIGHT)$(ITALIC)"Executable deleted"$(EOC)
 
 re: fclean all
 
