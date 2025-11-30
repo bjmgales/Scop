@@ -1,6 +1,6 @@
 #include <globalUtils.hpp>
 
-bool endsWith(const std::string &suffix, const std::string &str)
+bool endsWith(const std::string &str, const std::string &suffix)
 {
     if (suffix.size() > str.size())
         return false;
@@ -15,9 +15,9 @@ void printArgs(int argc, char **argv)
     }
 }
 
-void print(const std::string &str)
+void print()
 {
-    std::cout << str << std::endl;
+    return;
 }
 
 void printErr(const std::string &str, bool newline)
