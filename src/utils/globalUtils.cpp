@@ -7,6 +7,13 @@ bool endsWith(const std::string &str, const std::string &suffix)
     return str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
+bool startsWith(const std::string &str, const std::string &prefix)
+{
+    if (prefix.size() > str.size())
+        return false;
+    return str.compare(0, prefix.size(), prefix) == 0;
+}
+
 void printArgs(int argc, char **argv)
 {
     for (int i = 0; i < argc; ++i)
