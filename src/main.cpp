@@ -5,7 +5,6 @@ extern "C"
 
 #include <exception>
 #include <tuple>
-#include <vector>
 #include <fstream>
 #include <Object.hpp>
 
@@ -30,7 +29,7 @@ std::vector<std::string> parseArgs(int argc, char **argv)
   std::vector<std::string> fileContent;
   while (std::getline(file, line))
   {
-    print(line);
+    trim(line);
     fileContent.push_back(line);
   }
   return fileContent;

@@ -33,3 +33,19 @@ void printErr(const std::string &str, bool newline)
     if (newline)
         std::cerr << std::endl;
 }
+
+void trim(std::string &s)
+{
+    std::string::iterator it;
+
+    it = s.begin();
+    while (it != s.end() && std::isspace(static_cast<unsigned char>(*it)))
+        ++it;
+    s.erase(s.begin(), it);
+
+    if (s.empty()) return;
+    it = s.end() - 1;
+    while (it != s.begin() && std::isspace(static_cast<unsigned char>(*it)))
+        --it;
+    s.erase(it + 1, s.end());
+}
